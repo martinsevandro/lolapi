@@ -1,0 +1,1 @@
+consumindo api lol para verificar status das partidas

@@ -1,0 +1,43 @@
+/* runas */
+body {
+    overflow-x: hidden;
+}
+
+.perks-row {
+display: flex;
+gap: 5px;
+margin-bottom: 10px;
+}
+
+.perk-icon {
+width: 32px;
+height: 32px;
+border-radius: 5px;
+}
+
+/* itens */
+
+.items-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 5px;
+}
+
+.item-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    background-color: #1e1e1e;
+    padding: 2px;
+}
+
+
+
+/* tailwindsss */
+.text-blur {
+    color: rgb(255, 255, 255);
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5); 
+}
+ 
+  
