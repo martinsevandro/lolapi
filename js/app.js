@@ -51,6 +51,12 @@ function renderCard(data) {
 
     if (data.realRole === "sup" ) {
         cardContent = `
+            <!-- Estatisticas gerais - Primeira linha -->
+            <div class="flex justify-between text-sm text-gray-200 font-medium">
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${data.kills}/${data.deaths}/${data.assists}</span>
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${formatTime(data.gameLength)}</span>
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${data.totalMinionsKilled} CS</span>
+            </div>
             <!-- Estatisticas gerais - Segunda linha -->
             <div class="flex justify-between text-sm text-gray-200 font-medium px-1 text-center"> 
                 <span style="color=white; -webkit-text-stroke: 0.1px silver;" class="  rounded">${data.kda} KDA</span>
@@ -65,8 +71,37 @@ function renderCard(data) {
                 <span style="color=white; -webkit-text-stroke: 0.1px silver;" class="w-1/3 text-right">Gold/min ${data.goldPerMinute}</span>
             </div>
         `;
+    } else if (data.realRole === "jungle") {
+        cardContent = `
+            <!-- Estatisticas gerais - Primeira linha -->
+            <div class="flex justify-between text-sm text-gray-200 font-medium">
+                    <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${data.kills}/${data.deaths}/${data.assists}</span>
+                    <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${formatTime(data.gameLength)}</span>
+                    <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${data.totalMinionsKilledJg} CS</span>
+            </div>
+            <!-- Estatisticas gerais - Segunda linha -->
+            <div class="flex justify-between text-sm text-gray-200 font-medium px-1 text-center"> 
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class="  rounded">${data.kda} KDA</span>
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class="  rounded">${data.killParticipation} KP%</span>
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class="  rounded">${data.minionsPerMinuteJg} CS/min</span>
+            </div>
+
+            <!-- Estatisticas gerais - Terceira linha -->
+            <div class="flex w-full text-sm text-gray-200 font-medium px-1">
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class="w-1/3 text-left">Damage <br> ${data.totalDamageDealtToChampions}</span>
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class="w-1/3 text-center">Damage/min ${data.damagePerMinute}</span>
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class="w-1/3 text-right">Gold/min ${data.goldPerMinute}</span>
+            </div>
+        `;
+
     } else {
         cardContent = `
+            <!-- Estatisticas gerais - Primeira linha -->
+            <div class="flex justify-between text-sm text-gray-200 font-medium">
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${data.kills}/${data.deaths}/${data.assists}</span>
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${formatTime(data.gameLength)}</span>
+                <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${data.totalMinionsKilled} CS</span>
+            </div>
             <!-- Estatisticas gerais - Segunda linha -->
             <div class="flex justify-between text-sm text-gray-200 font-medium px-1 text-center"> 
                 <span style="color=white; -webkit-text-stroke: 0.1px silver;" class="  rounded">${data.kda} KDA</span>
@@ -104,14 +139,7 @@ function renderCard(data) {
                     </div>
                 </div>
                        
-                <!-- Estatisticas gerais - Primeira linha -->
-                <div class="flex justify-between text-sm text-gray-200 font-medium">
-                    <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${data.kills}/${data.deaths}/${data.assists}</span>
-                    <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${formatTime(data.gameLength)}</span>
-                    <span style="color=white; -webkit-text-stroke: 0.1px silver;" class=" px-1 rounded">${data.totalMinionsKilled} CS</span>
-                </div>
-
-                <!-- Estatisticas gerais - Segunda linha -->
+                <!-- Estatisticas gerais - Primeira, Segunda e Terceira linhas -->
                 ${cardContent}
                 
 

@@ -296,9 +296,12 @@ app.get('/api/matches/lol/last/:puuid/:platform', async (req, res) => {
             killParticipation: (100*playerStats.challenges.killParticipation).toFixed(2),
             totalDamageDealtToChampions: playerStats.totalDamageDealtToChampions,
             totalMinionsKilled: playerStats.totalMinionsKilled,
+            totalNeutralMinionsKilled: playerStats.neutralMinionsKilled,
+            totalMinionsKilledJg: (playerStats.totalMinionsKilled + playerStats.neutralMinionsKilled),
             gameLength: matchData.info.gameDuration,
             damagePerMinute: playerStats.challenges.damagePerMinute.toFixed(2),
             minionsPerMinute: ((playerStats.totalMinionsKilled)/(matchData.info.gameDuration/60)).toFixed(1),
+            minionsPerMinuteJg: ((playerStats.totalMinionsKilled + playerStats.neutralMinionsKilled)/(matchData.info.gameDuration/60)).toFixed(1),
             goldPerMinute: playerStats.challenges.goldPerMinute.toFixed(2),
             timeCCingOthers: playerStats.timeCCingOthers,
             visionScore: playerStats.visionScore,
@@ -355,12 +358,14 @@ app.get('/api/matches/lol/last/:puuid/:platform', async (req, res) => {
 });
 
 // rota para partidas recentes de lol pelo puuid do usuario (ok)
-app.get('/api/matches/lol/:puuid', async (req, res) => {
-    const { puuid } = req.params; 
+app.get('/api/matches/lol/:puuid/:platform', async (req, res) => {
+    const { puuid, platform } = req.params; 
+
+    const regionalRoute = getRegionalRoute(platform);
 
     try {
         const response = await axios.get(
-            `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids`, 
+            `https://${regionalRoute}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids`, 
             {
                 headers: {
                     'X-Riot-Token': process.env.RIOT_API_KEY,
@@ -376,12 +381,14 @@ app.get('/api/matches/lol/:puuid', async (req, res) => {
 });
 
 // rota para detalhes de uma partida especifica 
-app.get('/api/matches/lol/details/:matchId', async (req, res) => {
-    const { matchId } = req.params; // pega o matchId da url
+app.get('/api/matches/lol/details/:matchId/:platform', async (req, res) => {
+    const { matchId, platform } = req.params; // pega o matchId da url
 
+    const regionalRoute = getRegionalRoute(platform);
+    
     try {
         const response = await axios.get(
-            `https://americas.api.riotgames.com/lol/match/v5/matches/${matchId}`, 
+            `https://${regionalRoute}.api.riotgames.com/lol/match/v5/matches/${matchId}`, 
             {
                 headers: {
                     'X-Riot-Token': process.env.RIOT_API_KEY,
