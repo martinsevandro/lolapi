@@ -118,6 +118,36 @@ function renderCard(data) {
         `;
     }
 
+    let achievements = [];
+
+    if (data.gameMode === "CLASSIC" & data.jungleKing === true & data.deaths === 0 & data.killParticipation >= 60.0) {
+        achievements.push(`<img src="../assets/achievements/challenge-finalBoss.png" class="w-6 h-6" alt="achievement-finalBoss">`);
+    }
+    if (data.deaths === 0 & data.killParticipation >= 30.0) {
+        achievements.push(`<img src="../assets/achievements/challenge-perfectMatch.png" class="w-6 h-6" alt="achievement-perfectMatch">`);
+    }
+    if (data.gameMode === "CLASSIC" & data.jungleKing === true & data.killParticipation >= 30.0) {
+        achievements.push(`<img src="../assets/achievements/challenge-jungleKing.png" class="w-6 h-6" alt="achievement-jungleKing">`);
+        console.log("matchDragons é =", data.matchDragons);
+    }
+    if ((data.totalDamageDealtToChampions >= 10000 || data.damagePerMinute >= 1000) & data.killParticipation >= 30.0) {
+        achievements.push(`<img src="../assets/achievements/challenge-damageDealt.png" class="w-6 h-6" alt="achievement-damageDealt">`);
+    }
+    if (data.totalDamageTaken >= 10000 & data.killParticipation >= 30.0) {
+        achievements.push(`<img src="../assets/achievements/challenge-damageTaken.png" class="w-6 h-6" alt="achievement-damageTaken">`);
+    }
+    if (data.totalDamageShieldedOnTeammates >= 7000 & data.killParticipation >= 30.0) {
+        achievements.push(`<img src="../assets/achievements/challenge-shieldOnTeammates.png" class="w-6 h-6" alt="achievement-shielOnTeammates">`);
+    }
+    if (data.visionScore >= 50 & data.killParticipation >= 30.0) {
+        achievements.push(`<img src="../assets/achievements/challenge-visionScore.png" class="w-6 h-6" alt="achievement-visionScore">`);
+    }
+    if (data.pentaKills > 0) {
+        achievements.push(`<img src="../assets/achievements/challenge-pentaKill.png" class="w-6 h-6" alt="achievement-pentaKill">`);
+    }
+    if (data.totalHealsOnTeammates >= 10000 & data.killParticipation >= 30.0) {
+        achievements.push(`<img src="../assets/achievements/challenge-healer.png" class="w-6 h-6" alt="achievement-HealsOnTeammates">`);
+    }
   
     card.innerHTML = `
         <div class="relative w-[308px] h-[560px] rounded-none overflow-hidden shadow-lg border-4" style="border-color: ${data.corDaBorda};">
@@ -184,7 +214,12 @@ function renderCard(data) {
 
 
                 <!-- Data da partida -->
-                <div class="flex justify-end">
+                <div class="flex justify-between items-center mt-2">
+                    <!-- Achievements -->
+                    <div class="flex items-center">
+                        ${achievements.join("")}    
+                    </div>
+                            
                     <div class="mt-2 flex">                    
                         <p style="color=white; -webkit-text-stroke: 0.1px silver;" class="text-sm text-gray-200 inline-flex px-2 py-1 rounded">${data.gameDate}</p>                    
                     </div>

@@ -121,9 +121,9 @@ function defineRole(gameMode, teamPosition, role) {
         if (teamPosition === '' && role === 'SUPPORT') return 'sup';
         if (teamPosition === 'UTILITY' && role === 'SUPPORT') return 'sup'; // suporte
         if (teamPosition === 'UTILITY' && role === 'SOLO') return 'sup'; // suporte tbm
-        return 'jungle'; // caso não tenha uma posição definida
+        return 'sup'; // caso não tenha uma posição definida
     }
-    return 'jungle'; // fallback para outros modos de jogo, devido a (nota = KDA + ParticipaçãoKills)
+    return 'adc'; // fallback para outros modos de jogo, devido a (nota = KDA + ParticipaçãoKills)
 }
 
 
@@ -138,7 +138,7 @@ function definePlayerScore(kda, minionsPerMinute, PK, damagePerMinute, visionSco
             return (kda + minionsPerMinute);
         case 'adc':
             return (kda + damagePerMinute);
-        case 'support':
+        case 'sup':
             return (kda + visionScore);
         default:
             return (kda + damagePerMinute); // caso não tenha uma posição definida
@@ -298,6 +298,13 @@ app.get('/api/matches/lol/last/:puuid/:platform', async (req, res) => {
             totalMinionsKilled: playerStats.totalMinionsKilled,
             totalNeutralMinionsKilled: playerStats.neutralMinionsKilled,
             totalMinionsKilledJg: (playerStats.totalMinionsKilled + playerStats.neutralMinionsKilled),
+            teamId: playerStats.teamId,
+            teamDragonsKilled: playerStats.challenges.dragonTakedowns,
+            teamBaronsKilled: playerStats.challenges.baronTakedowns,
+            matchDragons: (matchData.info.teams[0].objectives.dragon.kills + matchData.info.teams[1].objectives.dragon.kills),
+            matchBarons: (matchData.info.teams[0].objectives.baron.kills + matchData.info.teams[1].objectives.baron.kills),
+            jungleKing: ((playerStats.challenges.dragonTakedowns == (matchData.info.teams[0].objectives.dragon.kills + matchData.info.teams[1].objectives.dragon.kills))
+             && (playerStats.challenges.baronTakedowns == (matchData.info.teams[0].objectives.baron.kills + matchData.info.teams[1].objectives.baron.kills))),
             gameLength: matchData.info.gameDuration,
             damagePerMinute: playerStats.challenges.damagePerMinute.toFixed(2),
             minionsPerMinute: ((playerStats.totalMinionsKilled)/(matchData.info.gameDuration/60)).toFixed(1),
@@ -308,6 +315,7 @@ app.get('/api/matches/lol/last/:puuid/:platform', async (req, res) => {
             firstBloodKill: playerStats.firstBloodKill,
             firstBloodAssist: playerStats.firstBloodAssist,
             totalDamageShieldedOnTeammates: playerStats.totalDamageShieldedOnTeammates,
+            totalHealsOnTeammates: playerStats.totalHealsOnTeammates, 
             totalDamageTaken: playerStats.totalDamageTaken,
             firstTowerKill: playerStats.firstTowerKill,
             firstTowerAssist: playerStats.firstTowerAssist,
