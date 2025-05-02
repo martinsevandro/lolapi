@@ -234,8 +234,9 @@ function renderCard(data) {
                     </div>
                 </div>
 
-                <!-- Verso do card -->                
-                <div class="flip-back bg-center bg-cover text-white flex flex-col items-center justify-center border-4"
+                <!-- Verso do card -->  
+                <!-- <div class="flip-front relative w-full h-full rounded-none overflow-hidden shadow-lg border-4 " style="border-color: ${data.corDaBorda};"> -->              
+                <div class="flip-back rounded-none overflow-hidden shadow-lg"
                 style="background-image: url('../assets/img/back-yugioh.jpg'); border-color: ${data.corDaBorda};">
                      
                 </div>
@@ -244,7 +245,7 @@ function renderCard(data) {
         </div>
     `;
 
-    // Adiciona o evento de clique para virar
+    // Adiciona o evento de clique para virarq
     card.addEventListener("click", () => {
         const inner = card.querySelector(".flip-inner");
         inner.classList.toggle("rotate-y-180");
