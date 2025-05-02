@@ -1,35 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Última Partida LoL</title>
-  <link rel="stylesheet" href="./css/style.css" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Status da Partida</title>
+  <link rel="stylesheet" href="./css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"
+    integrity="sha512-wC/cunGGDjXSl9OHUH0RuqSyW4YNLlsPwhcLxwWW1CR4OeC2E1xpcdZz2DeQkEmums41laI+eGMw95IJ15SS3g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
-<body class="bg-black min-h-screen flex flex-col items-center justify-start p-2 ">
+
+<body class="bg-gradient-to-b from-black via-gray-700 to-black min-h-screen flex flex-col items-center justify-start p-2 ">
   <main class="w-full flex flex-col items-center">
-        
+
     <form id="search-form" class="w-full max-w-md flex flex-col sm:flex-row sm:gap-4 gap-2">
-      <input 
-        type="text" 
-        id="riot-name" 
-        placeholder="Riot ID"
-        class="p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      <input type="text" id="riot-name" placeholder="Riot ID"
+        class="p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
         required />
 
-      <input 
-        type="text" 
-        id="riot-tag" 
-        placeholder="Tagline" 
-        class="p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      <input type="text" id="riot-tag" placeholder="Tagline"
+        class="p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
         required />
 
-      <select 
-        id="riot-server"
-        class="p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      <select id="riot-server"
+        class="p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
         required>
         <option value="br1">BR</option>
         <option value="na1">NA</option>
@@ -39,16 +38,15 @@
         <option value="jp1">JP</option>
       </select>
 
-      <button 
-        type="submit" 
-        class="p-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold">Buscar</button>
-    </form> 
+      <button type="submit" class="p-2 rounded-md bg-gray-700 hover:bg-gray-800 text-white font-bold">Buscar</button>
+    </form>
     <br>
 
     <section id="card-container" class="w-full flex justify-center mt-8"></section>
   </main>
-  
+
 
   <script src="js/app.js"></script>
 </body>
+
 </html>
