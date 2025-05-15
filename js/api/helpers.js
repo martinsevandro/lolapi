@@ -25,6 +25,31 @@ function getRuneIconUrl(runeId) {
     }
     return null;
 }
+
+// augments icons (arena)
+const augmentsURL = 'https://raw.communitydragon.org/latest/cdragon/arena/en_us.json';
+let augmentsData = [];
+
+async function loadAugmentsData() {
+    try {
+        const res = await axios.get(augmentsURL);
+        augmentsData = res.data.augments;
+    } catch (err) {
+        console.error('Erro ao carregar augments:', err.message);
+    }
+}
+
+function getAugmentIconUrl(augmentId) {
+    // Percorrer a lista de augments
+    for (const augment of augmentsData) {
+        if (Number(augment.id) === Number(augmentId) && augment.iconSmall) {
+            const url = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/${augment.iconSmall}`;
+            return url;
+        }
+    }
+    return null;
+}
+
   
 // shard perks icons
 function getShardIcon(id) {
@@ -127,8 +152,7 @@ function definePlayerScore(kda, minionsPerMinute, PK, damagePerMinute, visionSco
 function defineSkinPosition(skins, k, d, a) {
     if (skins.length === 0) return 0; // se não tiver skins, retorna null
         
-    let kda = ((k + a) / Math.max(d, 1)).toFixed(1);
-    console.log("kda:", kda);
+    let kda = ((k + a) / Math.max(d, 1)).toFixed(1); 
     
     let quartile = 0;    
     if (kda < 1.0) {
@@ -140,10 +164,8 @@ function defineSkinPosition(skins, k, d, a) {
     } else {
         quartile = 3;
     }
-    console.log("quartile:", quartile);
-
+    
     const quartileSize = Math.ceil(skins.length / 4);   //retorna o menor inteiro maior ou igual ao valor
-    console.log("quartileSize: ", quartileSize);
 
     const endIndex = Math.min((quartile + 1) * quartileSize, skins.length); 
           
@@ -154,8 +176,7 @@ function defineSkinPosition(skins, k, d, a) {
 }
 
 function defineCorDaBorda(k, d, a){
-    const kda = ((k + a) / Math.max(d, 1)).toFixed(1);
-    console.log("kda:", kda);
+    const kda = ((k + a) / Math.max(d, 1)).toFixed(1); 
      
     if (kda < 2.0) {
         // Bronze 
@@ -179,6 +200,8 @@ const styledSpan = (content, className = '') =>
 module.exports = {
     loadRunesData,
     getRuneIconUrl,
+    loadAugmentsData,
+    getAugmentIconUrl,
     getShardIcon,
     loadSpellsData,
     getSummonerSpellIcon,

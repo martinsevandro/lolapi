@@ -5,6 +5,7 @@ module.exports = router;
 
 const {
     loadRunesData,
+    loadAugmentsData,
     loadSpellsData,
     loadItemsData,
     getRegionalRoute,
@@ -16,6 +17,7 @@ const createFilteredData = require('../services/dataFilter.js');
 
 // Carregar os dados externos apenas uma vez no inicio
 loadRunesData();
+loadAugmentsData();
 loadSpellsData();
 loadItemsData();
 

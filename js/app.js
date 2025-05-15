@@ -1,4 +1,4 @@
-import { buildCardContent } from './services/cardContentBuilder.js';  // Importando a função
+import { buildCardContent, runasCardContent } from './services/cardContentBuilder.js';  // Importando a função
 
 document.getElementById('search-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -52,6 +52,8 @@ function renderCard(data) {
     card.classList.add('player-card', 'flip-card', 'w-[308px]', 'h-[560px]', 'perspective');
 
     const cardContent = buildCardContent(data);  // funcao para status base da carta
+
+    const runaContent = runasCardContent(data); // funcao para status de spells da carta
 
     // Adiciona os icones de achievements no card se conseguir alguns status
     let achievements = [];
@@ -117,22 +119,7 @@ function renderCard(data) {
                         
                         <!-- Runas e StatPerks - Quarta linha -->
                         <div class="flex justify-between items-center mt-2">
-                            <!-- Runas -->
-                            <div class="flex flex-wrap gap-1">
-                                <img src="${data.perks.primaryStyle}" class="w-6 h-6" alt="runap0">
-                                <img src="${data.perks.primaryStyleSec}" class="w-6 h-6" alt="runap1">
-                                <img src="${data.perks.primaryStyleTert}" class="w-6 h-6" alt="runap2">
-                                <img src="${data.perks.primaryStyleQuat}" class="w-6 h-6" alt="runap3">
-                                <img src="${data.perks.subStyle}" class="w-6 h-6" alt="runas0">
-                                <img src="${data.perks.subStyleSec}" class="w-6 h-6" alt="runas1">
-                            </div>
-
-                            <!-- StatPerks -->
-                            <div class="flex gap-1 ml-2">
-                                <img src="${data.perks.offense}" class="w-6 h-6" alt="offense-perk">
-                                <img src="${data.perks.flex}" class="w-6 h-6" alt="flex-perk">
-                                <img src="${data.perks.defense}" class="w-6 h-6" alt="defense-perk">
-                            </div>
+                            ${runaContent}
                         </div>
 
                         <!-- Itens e Spells - Quinta linha -->

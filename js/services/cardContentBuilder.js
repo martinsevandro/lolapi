@@ -70,6 +70,41 @@ function buildCardContent(data) {
     }
 }
 
+function runasCardContent(data) {
+    if (data.gameMode === "CHERRY"){
+        return `
+            <!-- Augments -->
+            <div class="flex flex-wrap gap-1">
+                ${Object.values(data.augments)
+                    .filter(url => url) // remove null/undefined
+                    .map(url => `<img src="${url}" class="w-6 h-6 bg-black rounded" alt="augment">`)
+                    .join('')}
+            </div>
+        `;
+
+    } else {
+        return  `
+            <!-- Runas -->
+            <div class="flex flex-wrap gap-1">
+                <img src="${data.perks.primaryStyle}" class="w-6 h-6" alt="runap0">
+                <img src="${data.perks.primaryStyleSec}" class="w-6 h-6" alt="runap1">
+                <img src="${data.perks.primaryStyleTert}" class="w-6 h-6" alt="runap2">
+                <img src="${data.perks.primaryStyleQuat}" class="w-6 h-6" alt="runap3">
+                <img src="${data.perks.subStyle}" class="w-6 h-6" alt="runas0">
+                <img src="${data.perks.subStyleSec}" class="w-6 h-6" alt="runas1">
+            </div>
+
+            <!-- StatPerks -->
+            <div class="flex gap-1 ml-2">
+                <img src="${data.perks.offense}" class="w-6 h-6" alt="offense-perk">
+                <img src="${data.perks.flex}" class="w-6 h-6" alt="flex-perk">
+                <img src="${data.perks.defense}" class="w-6 h-6" alt="defense-perk">
+            </div>
+         `;
+    }
+
+}
+
 
 function formatTime(seconds) {
     const min = Math.floor(seconds / 60);
@@ -77,4 +112,4 @@ function formatTime(seconds) {
     return `${min}m ${sec}s`;
 }
 
-export { buildCardContent };
+export { buildCardContent, runasCardContent };

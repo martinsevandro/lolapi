@@ -21,6 +21,7 @@ app.use('', routes);
 // funções auxiliares de helpers
 const {
     loadRunesData,
+    loadAugmentsData,
     getRuneIconUrl,
     getShardIcon,
     loadSpellsData,
@@ -34,9 +35,33 @@ const {
 
 } = require('./js/api/helpers.js');
 
-loadRunesData();
-loadSpellsData();
-loadItemsData();
+
+// Função assíncrona para carregar dados e iniciar o servidor
+async function startServer() {
+    try {
+        // Aguarda o carregamento completo dos dados antes de iniciar o servidor
+        await loadAugmentsData(); 
+        await loadRunesData();    
+        await loadSpellsData();   
+        await loadItemsData();    
+        
+        console.log('Dados carregados com sucesso.');
+        
+        app.listen(PORT, () => {
+            console.log(`Servidor rodando em http://localhost:${PORT}`);
+        });
+    } catch (err) {
+        console.error('Erro ao carregar dados ou iniciar o servidor:', err);
+    }
+}
+
+// Chama a função que carrega os dados e inicia o servidor
+startServer();
+
+// loadAugmentsData();
+// loadRunesData();
+// loadSpellsData();
+// loadItemsData();
 
 
 // funcoes que estarão em helpers.js
@@ -432,8 +457,8 @@ loadItemsData();
 
 
 
-// iniciar server
-app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+// // iniciar server
+// app.listen(PORT, () => {
+//     console.log(`Servidor rodando em http://localhost:${PORT}`);
+// });
 

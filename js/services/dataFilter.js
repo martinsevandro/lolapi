@@ -4,6 +4,7 @@ const {
     getShardIcon,
     getRuneIconUrl,
     getSummonerSpellIcon,
+    getAugmentIconUrl,
 
 } = require('../api/helpers.js');
 
@@ -74,8 +75,16 @@ function createFilteredData(matchData, playerStats, splashArtUrl) {
             playerStats.item3,
             playerStats.item4,
             playerStats.item5,
-            playerStats.item6,
+            playerStats.item6
         ],
+        augments: {
+            augment1: getAugmentIconUrl(playerStats.playerAugment1),
+            augment2: getAugmentIconUrl(playerStats.playerAugment2),
+            augment3: getAugmentIconUrl(playerStats.playerAugment3),
+            augment4: getAugmentIconUrl(playerStats.playerAugment4),
+            augment5: getAugmentIconUrl(playerStats.playerAugment5),
+            augment6: getAugmentIconUrl(playerStats.playerAugment6)
+        },
         gameDate: new Date(matchData.info.gameStartTimestamp).toLocaleDateString('pt-BR', {
             day: '2-digit',
             month: '2-digit',
