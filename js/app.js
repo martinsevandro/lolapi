@@ -88,19 +88,19 @@ function renderCard(data) {
     if (data.gameMode === "CLASSIC" & data.jungleKing === true & data.deaths === 0 & data.killParticipation >= 60.0) {
         achievements.push(`<img src="../assets/achievements/challenge-finalBoss.png" class="w-6 h-6" alt="achievement-finalBoss" title="The Final Boss">`);
     }
-    if (data.deaths === 0 & data.killParticipation >= 60.0) {
+    if (data.deaths === 0 & (data.gameMode === "CHERRY" || data.killParticipation >= 60.0)) {
         achievements.push(`<img src="../assets/achievements/challenge-perfectMatch.png" class="w-6 h-6" alt="achievement-perfectMatch" title="This is Perfect">`);
     }
     if (data.gameMode === "CLASSIC" & data.jungleKing === true & data.killParticipation >= 40.0) {
         achievements.push(`<img src="../assets/achievements/challenge-jungleKing.png" class="w-6 h-6" alt="achievement-jungleKing" title="The Jungle King">`);        
     }
-    if (data.damagePerMinute >= 1000 & data.killParticipation >= 40.0) {
+    if (data.damagePerMinute >= 1000 & (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
         achievements.push(`<img src="../assets/achievements/challenge-damageDealt.png" class="w-6 h-6" alt="achievement-damageDealt" title="The Damage Master">`);
     }
-    if (data.totalDamageTaken >= 10000 & data.killParticipation >= 40.0) {
+    if (data.totalDamageTaken >= 10000 & (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
         achievements.push(`<img src="../assets/achievements/challenge-damageTaken.png" class="w-6 h-6" alt="achievement-damageTaken" title="The Tank">`);
     }
-    if (data.totalDamageShieldedOnTeammates >= 7000 & data.killParticipation >= 40.0) {
+    if (data.totalDamageShieldedOnTeammates >= 5000 & (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
         achievements.push(`<img src="../assets/achievements/challenge-shieldOnTeammates.png" class="w-6 h-6" alt="achievement-shielOnTeammates" title="The Protect">`);
     }
     if (data.visionScore >= 80 & data.killParticipation >= 40.0) {
@@ -109,7 +109,7 @@ function renderCard(data) {
     if (data.pentaKills > 0) {
         achievements.push(`<img src="../assets/achievements/challenge-pentaKill.png" class="w-6 h-6" alt="achievement-pentaKill" title="Penta Kill!">`);
     }
-    if (data.totalHealsOnTeammates >= 5000 & data.killParticipation >= 40.0) {
+    if (data.totalHealsOnTeammates >= 5000 & (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
         achievements.push(`<img src="../assets/achievements/challenge-healer.png" class="w-6 h-6" alt="achievement-HealsOnTeammates" title="The Ambulance">`);
     } 
 

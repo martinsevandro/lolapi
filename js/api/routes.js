@@ -121,6 +121,8 @@ router.get('/api/matches/lol/last/:puuid/:platform/:matchId', async (req, res) =
         // Achar os dados do jogador com o PUUID
         const playerStats = matchData.info.participants.find(p => p.puuid === puuid);
 
+        const duoStats = matchData.info.participants.find(p => p.puuid !== puuid && p.subteamPlacement === playerStats.subteamPlacement);
+
         if (!playerStats) {
             return res.status(404).json({ error: 'Jogador não encontrado na partida.' });
         }
@@ -138,11 +140,12 @@ router.get('/api/matches/lol/last/:puuid/:platform/:matchId', async (req, res) =
             const selectedSkinNum = skins[skinPosition]?.num ?? skins[0].num;
 
             splashArtUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${playerStats.championName}_${selectedSkinNum}.jpg`;
+            iconChampionUrl = `https://ddragon.leagueoflegends.com/cdn/15.8.1/img/champion/${duoStats.championName}.png`;
         } catch (err) {
             console.error("Erro ao buscar skin do campeão:", err.message);
         }
 
-        const filteredData = createFilteredData(matchData, playerStats, splashArtUrl);
+        const filteredData = createFilteredData(matchData, playerStats, splashArtUrl, iconChampionUrl);
         
         res.json(filteredData);        
 

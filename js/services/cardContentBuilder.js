@@ -8,7 +8,7 @@ const commonSpanStyle = `
 
 function buildFirstLine(data, csLabel) {
     return `
-        <div class="flex justify-between text-sm font-medium">
+        <div class="flex justify-between items-end text-sm font-medium">
             <span style="${commonSpanStyle}" class="px-1 rounded">${data.kills}/${data.deaths}/${data.assists}</span>
             <span style="${commonSpanStyle}" class="px-1 rounded">${formatTime(data.gameLength)}</span>
             <span style="${commonSpanStyle}" class="px-1 rounded">${csLabel}</span>
@@ -37,6 +37,19 @@ function buildThirdLine(cols) {
 }
 
 function buildCardContent(data) {
+    // modo arena
+    if (data.gameMode === "CHERRY") {
+        return (
+            buildFirstLine(data, `<img src="${data.iconChampion}" class="w-12 h-12" alt="duoChampion">`) +
+            buildSecondLine(data, `${data.timeCCingOthers}s CC`) +
+            buildThirdLine([
+                `Damage <br> ${data.totalDamageDealtToChampions}`,
+                `DamagePM ${data.damagePerMinute}`,
+                `GoldPM ${data.goldPerMinute}`,
+            ])
+        );
+    }
+
     if (data.realRole === "sup") {
         return (
             buildFirstLine(data, `${data.totalMinionsKilled} CS`) +

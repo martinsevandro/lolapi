@@ -8,7 +8,7 @@ const {
 
 } = require('../api/helpers.js');
 
-function createFilteredData(matchData, playerStats, splashArtUrl) {
+function createFilteredData(matchData, playerStats, splashArtUrl, iconChampionUrl) {
     return {
         gameMode: matchData.info.gameMode,
         championName: playerStats.championName,
@@ -52,6 +52,7 @@ function createFilteredData(matchData, playerStats, splashArtUrl) {
         quadraKills: playerStats.quadraKills,
         pentaKills: playerStats.pentaKills,
         splashArt: splashArtUrl,
+        iconChampion: iconChampionUrl,
         corDaBorda: defineCorDaBorda(playerStats.kills, playerStats.deaths, playerStats.assists),
         perks: {
             defense: getShardIcon(playerStats.perks.statPerks.defense),
