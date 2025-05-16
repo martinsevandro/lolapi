@@ -8,6 +8,18 @@ document.getElementById('search-form').addEventListener('submit', async (e) => {
     const server = document.getElementById('riot-server').value.trim();
     const matchID = document.getElementById('match-id').value.trim();
 
+    const cardError = { 
+        riotIdGameName: "Maintenance", 
+        splashArt: "../assets/img/wantedAPI.png",
+        corDaBorda: "linear-gradient(45deg, #633B1B, #965F32, #BB8947, #A0652E)", 
+        gameDate: new Date().toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        }),
+        
+    };
+
     if (!name || !tag || !server ) return alert('Preencha nome, tag e servidor');
 
     try {
@@ -31,7 +43,17 @@ document.getElementById('search-form').addEventListener('submit', async (e) => {
         
         // Buscar partida com base no matchID
         const matchRes = await fetch(matchUrl);
-        if (!matchRes.ok) throw new Error('Erro ao buscar a partida');
+        console.log('matchRes:', matchRes); // Verifique a resposta da partida
+
+        if (!matchRes.ok){
+            const errorData = await matchRes.json().catch(() => ({}));
+            if (matchRes.status === 403) {
+                renderErrorCard(cardError);
+                return;
+            }
+            throw new Error(errorData.error || 'Erro ao buscar a partida');
+        }  
+
         const matchData = await matchRes.json();
         
         console.log('Dados da partida:', matchData); // Verifique os dados da partida
@@ -40,7 +62,12 @@ document.getElementById('search-form').addEventListener('submit', async (e) => {
         renderCard(matchData);
     } catch (err) {
         console.error('Erro geral:', err);
-        alert('Erro ao buscar dados. Verifique os campos e tente novamente.');
+    
+        if (err.message.includes('403') || err.message.includes('Forbidden')) {
+            renderErrorCard(cardError);
+        } else {
+            alert('Erro ao buscar dados. Verifique os campos e tente novamente.'); 
+        }
     }
 });
 
@@ -108,7 +135,8 @@ function renderCard(data) {
                             <h2 class="text-center text-blur" style="
                                 font-family: 'Herr Von Muellerhoff', cursive;
                                 color: white; 
-                                -webkit-text-stroke: 0.5px gold;
+                                -webkit-text-stroke: 0.5px gold; 
+                                text-shadow: 0 0 9px black;
                                 font-size: clamp(2.5rem, 5vw, 3.4rem);">
                                 ${data.riotIdGameName}
                             </h2>                            
@@ -186,4 +214,70 @@ function renderCard(data) {
         reverse: true,
     });
 
+}
+
+function renderErrorCard(errorData) {
+    const container = document.getElementById('card-container');
+    container.innerHTML = ''; // Limpar o container
+
+    const card = document.createElement('div');
+    card.classList.add('player-card', 'flip-card', 'w-[308px]', 'h-[560px]', 'perspective');
+
+    card.innerHTML = ` 
+        <div class="carta flip-card w-[308px] h-[560px] relative">
+        
+            <div class="flip-inner relative w-full h-full">
+
+                <!-- Frente do card -->
+                <div class="flip-front relativo w-full h-full rounded-none overflow-hidden shadow-lg border-4" 
+                    style="border: 4px solid transparent; border-image: ${errorData.corDaBorda} 1;">
+
+                    <!-- Splash da skin de fundo -->
+                    <img src="${errorData.splashArt}"
+                    class="absolute w-full h-full object-cover"
+                    alt="card-ApiError" />
+
+                    <!-- Conteúdo que ficará sobre o card -->
+                    <div class="absolute bottom-0 w-full text-white p-4 space-y-2"> 
+                    
+                        <!-- Nome e Tag -->
+                        <div class="flex justify-center">
+                            <h2 class="text-sm inline-flex px-2 py-1 rounded mb-8" style="
+                                font-family: Poppins; font-weight: 500; color: black; -webkit-text-stroke: 0.1px black; text-shadow: 0 0 9px black;">
+                                ${errorData.gameDate}
+                                 
+                            </h2>
+                        </div>
+                         
+                    </div>
+                </div>
+
+                <!-- Verso do card -->
+                <div class="flip-back rounded-none overflow-hidden shadow-lg border-4" 
+                    style="border: 4px solid transparent; border-image: ${errorData.corDaBorda} 1; background: ${errorData.corDaBorda}; ">
+                        
+                    <div class="items flex justify-center items-center h-full"
+                        style="background-image: url('../assets/img/lol-icone-back.png'); background-size: 70%; background-repeat: no-repeat; background-position: center;">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    `;
+
+    // Adiciona o evento de clique para virarq
+    card.addEventListener("click", () => {
+        const inner = card.querySelector(".flip-inner");
+        inner.classList.toggle("rotate-y-180");
+    });
+
+    container.appendChild(card);
+
+    VanillaTilt.init(card.querySelectorAll(".carta"), {
+        max: 2,
+        speed: 100,
+        reverse: true,
+    });
+
+                    
 }
