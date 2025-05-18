@@ -175,15 +175,34 @@ function defineSkinPosition(skins, k, d, a) {
     return randomIndex; 
 }
 
-function defineCorDaBorda(k, d, a){
+function defineCorDaBordaFrontal(k, d, a){
     const kda = ((k + a) / Math.max(d, 1)).toFixed(1); 
      
     if (kda < 2.0) {
         // Bronze 
-        return "linear-gradient(45deg, #633B1B, #965F32, #BB8947, #A0652E)";
+        // return "linear-gradient(45deg, #633B1B, #965F32, #BB8947, #A0652E)";
+        return " #633B1B";
     } else if (kda < 4.0) {
         // Prata 
-        return "linear-gradient(45deg,rgb(146, 146, 146),rgb(209, 209, 209),rgb(235, 235, 235),rgb(177, 177, 177))";
+        // return "linear-gradient(45deg,rgb(146, 146, 146),rgb(209, 209, 209),rgb(235, 235, 235),rgb(177, 177, 177))";
+        return " #929292";
+    } else {
+        // Ouro ou Roxo
+        // return "linear-gradient(45deg, #FFD700, #FFB300, #FF9E00, #E1A700)"; 
+        // return "linear-gradient(45deg, #1A002B, #3D0066, #6A0DAD, #39114D)";
+        return " #6A0DAD";
+    }
+}
+
+function defineCorVerso(k, d, a){
+    const kda = ((k + a) / Math.max(d, 1)).toFixed(1); 
+     
+    if (kda < 2.0) {
+        // Bronze 
+        return "linear-gradient(45deg, #633B1B, #965F32, #BB8947, #A0652E)";        
+    } else if (kda < 4.0) {
+        // Prata 
+        return "linear-gradient(45deg, #929292, #D1D1D1, #EBEBEB, #B1B1B1)";
     } else {
         // Ouro ou Roxo
         // return "linear-gradient(45deg, #FFD700, #FFB300, #FF9E00, #E1A700)"; 
@@ -210,7 +229,8 @@ module.exports = {
     defineRole,
     definePlayerScore,
     defineSkinPosition,
-    defineCorDaBorda,
+    defineCorDaBordaFrontal,
+    defineCorVerso,
     commonStyle,
     styledSpan,
 };

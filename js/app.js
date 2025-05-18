@@ -11,7 +11,8 @@ document.getElementById('search-form').addEventListener('submit', async (e) => {
     const cardError = { 
         riotIdGameName: "Maintenance", 
         splashArt: "../assets/img/wantedAPI.png",
-        corDaBorda: "linear-gradient(45deg, #633B1B, #965F32, #BB8947, #A0652E)", 
+        corDaBorda: "#633B1B", 
+        corDoVerso: "linear-gradient(45deg, #633B1B, #965F32, #BB8947, #A0652E)",
         gameDate: new Date().toLocaleDateString('pt-BR', {
             day: '2-digit',
             month: '2-digit',
@@ -120,7 +121,7 @@ function renderCard(data) {
 
                 <!-- Frente do card -->
                 <div class="flip-front relative w-full h-full rounded-none overflow-hidden shadow-lg border-4" 
-                    style="border: 4px solid transparent; border-image: ${data.corDaBorda} 1;">                    
+                    style="border: 4px solid ${data.corDaBorda};">
                 
                     <!-- Splash da skin de fundo -->                    
                     <img src="${data.splashArt}" 
@@ -187,7 +188,7 @@ function renderCard(data) {
 
                 <!-- Verso do card -->  
                 <div class="flip-back rounded-none overflow-hidden shadow-lg border-4" 
-                    style="border: 4px solid transparent; border-image: ${data.corDaBorda} 1; background: ${data.corDaBorda}; ">
+                    style="border: 4px solid transparent; border-image: ${data.corDoVerso} 1; background: ${data.corDoVerso}; ">
                         
                     <div class="items flex justify-center items-center h-full" 
                         style="background-image: url('../assets/img/lol-icone-back.png'); background-size: 70%; background-repeat: no-repeat; background-position: center;">
@@ -216,6 +217,51 @@ function renderCard(data) {
 
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('btn-salvar-imagem');
+    btn.addEventListener('click', () => {
+        const card = document.querySelector('.player-card');
+        if (!card) return;
+
+        const inner = card.querySelector('.flip-inner');
+        if (!inner) return;
+
+        // Verifica se o card está virado
+        const isFlipped = inner.classList.contains('rotate-y-180');
+
+        // Remove a rotação temporariamente para capturar a frente
+        inner.classList.remove('rotate-y-180');
+        inner.style.transform = 'none';
+
+        // Opcional: esconder verso para garantir que não apareça
+        const back = card.querySelector('.flip-back');
+        if (back) back.style.visibility = 'hidden';
+
+        setTimeout(() => {
+            html2canvas(card, { useCORS: true, allowTaint: false}).then(canvas => {
+                // Restaurar o estado original da rotação
+                if (isFlipped) {
+                    inner.classList.add('rotate-y-180');
+                    inner.style.transform = '';
+                } else {
+                    inner.style.transform = '';
+                }
+
+                if (back) back.style.visibility = '';
+
+                // Salvar imagem
+                const a = document.createElement('a');
+                a.href = canvas.toDataURL('image/png');
+                a.download = 'carta-jogador.png';
+                a.click();
+            });
+        }, 500); // espera um pouco para renderizar a mudança
+    });
+});
+
+
+
+
 function renderErrorCard(errorData) {
     const container = document.getElementById('card-container');
     container.innerHTML = ''; // Limpar o container
@@ -230,7 +276,7 @@ function renderErrorCard(errorData) {
 
                 <!-- Frente do card -->
                 <div class="flip-front relativo w-full h-full rounded-none overflow-hidden shadow-lg border-4" 
-                    style="border: 4px solid transparent; border-image: ${errorData.corDaBorda} 1;">
+                    style="border: 4px solid ${errorData.corDaBorda};">
 
                     <!-- Splash da skin de fundo -->
                     <img src="${errorData.splashArt}"
@@ -254,7 +300,7 @@ function renderErrorCard(errorData) {
 
                 <!-- Verso do card -->
                 <div class="flip-back rounded-none overflow-hidden shadow-lg border-4" 
-                    style="border: 4px solid transparent; border-image: ${errorData.corDaBorda} 1; background: ${errorData.corDaBorda}; ">
+                    style="border: 4px solid transparent; border-image: ${errorData.corDoVerso} 1; background: ${errorData.corDoVerso}; ">
                         
                     <div class="items flex justify-center items-center h-full"
                         style="background-image: url('../assets/img/lol-icone-back.png'); background-size: 70%; background-repeat: no-repeat; background-position: center;">
