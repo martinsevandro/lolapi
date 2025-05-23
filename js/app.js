@@ -1,4 +1,4 @@
-import { buildCardContent, runasCardContent } from './services/cardContentBuilder.js';  // Importando a função
+import { buildCardContent, runasCardContent, itemsCardContent, spellsCardContent, escapeHTML, getSafeImageSrc } from './services/cardContentBuilder.js';  // Importando a função
 
 document.getElementById('search-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -24,12 +24,11 @@ document.getElementById('search-form').addEventListener('submit', async (e) => {
 
     try {
         // const baseUrl = 'http://localhost:3001'; // URL base da sua API
-        console.log(`Buscando PUUID para: ${name} ${tag} ${server}`); 
+        // console.log(`Buscando PUUID para: ${name} ${tag} ${server}`); 
 
         // 1. Buscar PUUID
-        const puuidRes = await fetch(`http://localhost:3001/api/player/${name}/${tag}/${server}`);
-        if (!puuidRes.ok) throw new Error('Erro ao buscar PUUID');
-        const puuidData = await puuidRes.json();
+        const puuidRes = await axios.get(`http://localhost:3001/api/player/${name}/${tag}/${server}`);
+        const puuidData = puuidRes.data;
         
         // Partida de acordo com o matchID
         let matchUrl;
@@ -42,21 +41,24 @@ document.getElementById('search-form').addEventListener('submit', async (e) => {
         }
         
         // Buscar partida com base no matchID
-        const matchRes = await fetch(matchUrl);
-        console.log('matchRes:', matchRes); // Verifique a resposta da partida
-
-        if (!matchRes.ok){
-            const errorData = await matchRes.json().catch(() => ({}));
-            if (matchRes.status === 403) {
+        let matchRes;
+        
+        try {
+            matchRes = await axios.get(matchUrl);
+        } catch (error) { 
+            if (error.response && error.response.status === 403) {
                 renderErrorCard(cardError);
                 return;
+            } else {
+                const errorMsg = error.response?.data?.error || 'Erro ao buscar a partida';
+                throw new Error(errorMsg);
             }
-            throw new Error(errorData.error || 'Erro ao buscar a partida');
-        }  
-
-        const matchData = await matchRes.json();
+        }
+        // console.log('Dados da partida (matchRes):', matchRes); // Verifique a resposta da partida
         
-        console.log('Dados da partida:', matchData); // Verifique os dados da partida
+        const matchData = matchRes.data;
+        
+        // console.log('Dados da partida (matchData):', matchData); // Verifique os dados da partida
 
         // 3. Renderizar no card
         renderCard(matchData);
@@ -82,34 +84,38 @@ function renderCard(data) {
 
     const runaContent = runasCardContent(data); // funcao para status de spells da carta
 
+    const itemContent = itemsCardContent(data);
+
+    const spellContent = spellsCardContent(data); 
+
     // Adiciona os icones de achievements no card se conseguir alguns status
     let achievements = [];
 
-    if (data.gameMode === "CLASSIC" & data.jungleKing === true & data.deaths === 0 & data.killParticipation >= 60.0) {
+    if (data.gameMode === "CLASSIC" && data.jungleKing === true && data.deaths === 0 && data.killParticipation >= 60.0) {
         achievements.push(`<img src="../assets/achievements/challenge-finalBoss.png" class="w-6 h-6" alt="achievement-finalBoss" title="The Final Boss">`);
     }
-    if (data.deaths === 0 & (data.gameMode === "CHERRY" || data.killParticipation >= 60.0)) {
+    if (data.deaths === 0 && (data.gameMode === "CHERRY" || data.killParticipation >= 60.0)) {
         achievements.push(`<img src="../assets/achievements/challenge-perfectMatch.png" class="w-6 h-6" alt="achievement-perfectMatch" title="This is Perfect">`);
     }
-    if (data.gameMode === "CLASSIC" & data.jungleKing === true & data.killParticipation >= 40.0) {
+    if (data.gameMode === "CLASSIC" && data.jungleKing === true && data.killParticipation >= 40.0) {
         achievements.push(`<img src="../assets/achievements/challenge-jungleKing.png" class="w-6 h-6" alt="achievement-jungleKing" title="The Jungle King">`);        
     }
-    if (data.damagePerMinute >= 1000 & (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
+    if (data.damagePerMinute >= 1000 && (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
         achievements.push(`<img src="../assets/achievements/challenge-damageDealt.png" class="w-6 h-6" alt="achievement-damageDealt" title="The Damage Master">`);
     }
-    if (data.totalDamageTaken >= 10000 & (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
+    if (data.totalDamageTaken >= 10000 && (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
         achievements.push(`<img src="../assets/achievements/challenge-damageTaken.png" class="w-6 h-6" alt="achievement-damageTaken" title="The Tank">`);
     }
-    if (data.totalDamageShieldedOnTeammates >= 5000 & (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
+    if (data.totalDamageShieldedOnTeammates >= 5000 && (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
         achievements.push(`<img src="../assets/achievements/challenge-shieldOnTeammates.png" class="w-6 h-6" alt="achievement-shielOnTeammates" title="The Protect">`);
     }
-    if (data.visionScore >= 80 & data.killParticipation >= 40.0) {
+    if (data.visionScore >= 80 && data.killParticipation >= 40.0) {
         achievements.push(`<img src="../assets/achievements/challenge-visionScore.png" class="w-6 h-6" alt="achievement-visionScore" title="Super Vision!">`);
     }
     if (data.pentaKills > 0) {
         achievements.push(`<img src="../assets/achievements/challenge-pentaKill.png" class="w-6 h-6" alt="achievement-pentaKill" title="Penta Kill!">`);
     }
-    if (data.totalHealsOnTeammates >= 5000 & (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
+    if (data.totalHealsOnTeammates >= 5000 && (data.gameMode === "CHERRY" || data.killParticipation >= 40.0)) {
         achievements.push(`<img src="../assets/achievements/challenge-healer.png" class="w-6 h-6" alt="achievement-HealsOnTeammates" title="The Ambulance">`);
     } 
 
@@ -123,7 +129,7 @@ function renderCard(data) {
                     style="border: 4px solid transparent; border-image: ${data.corDaBorda} 1;">                    
                 
                     <!-- Splash da skin de fundo -->                    
-                    <img src="${data.splashArt}" 
+                    <img src="${getSafeImageSrc(data.splashArt)}" 
                     class="absolute w-full h-full object-cover" 
                     alt="card-champion" />
                     
@@ -138,7 +144,7 @@ function renderCard(data) {
                                 -webkit-text-stroke: 0.5px gold; 
                                 text-shadow: 0 0 9px black;
                                 font-size: clamp(2.5rem, 5vw, 3.4rem);">
-                                ${data.riotIdGameName}
+                                ${escapeHTML(data.riotIdGameName)}
                             </h2>                            
                         </div>
                             
@@ -153,18 +159,10 @@ function renderCard(data) {
                         <!-- Itens e Spells - Quinta linha -->
                         <div class="flex justify-between items-center mt-2">
                             <!-- Itens -->
-                            <div class="flex flex-wrap gap-1">
-                                ${data.items
-                                .filter(id => id !== 0) // filtra itens "vazios"
-                                .map(id => `<img src="https://ddragon.leagueoflegends.com/cdn/15.8.1/img/item/${id}.png" class="w-6 h-6" alt="item ${id}">`)
-                                .join('')}
-                            </div>
+                            ${itemContent}
 
                             <!-- Spells -->
-                            <div class="flex gap-1 ml-2">
-                                <img src="${data.summonerSpells.spell1}" class="w-6 h-6 bg-black/25 backdrop-blur-sm" alt="spell1">
-                                <img src="${data.summonerSpells.spell2}" class="w-6 h-6 bg-black/25 backdrop-blur-sm" alt="spell2">
-                            </div>                    
+                            ${spellContent}                    
                             
                         </div>
 
@@ -178,7 +176,7 @@ function renderCard(data) {
                             <div class="mt-2 flex">                    
                                 <p style="font-family: Poppins; font-weight: 500; color: white; -webkit-text-stroke: 0.1px black; text-shadow: 0 0 9px black;" 
                                     class="text-sm inline-flex px-2 py-1 rounded">
-                                    ${data.gameDate}</p>                    
+                                    ${escapeHTML(data.gameDate)}</p>                    
                             </div>
                         </div>   
 
@@ -244,7 +242,7 @@ function renderErrorCard(errorData) {
                         <div class="flex justify-center">
                             <h2 class="text-sm inline-flex px-2 py-1 rounded mb-8" style="
                                 font-family: Poppins; font-weight: 500; color: black; -webkit-text-stroke: 0.1px black; text-shadow: 0 0 9px black;">
-                                ${errorData.gameDate}
+                                ${escapeHTML(errorData.gameDate)}
                                  
                             </h2>
                         </div>

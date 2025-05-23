@@ -4,37 +4,41 @@ const router = express.Router();
 module.exports = router;
 
 const {
-    loadRunesData,
-    loadAugmentsData,
-    loadSpellsData,
-    loadItemsData,
-    getRegionalRoute,
     // definePlayerScore,   // futura definicao pra evitar kda players
+    getRegionalRoute,
     defineSkinPosition,
+    isValidRiotId,
 } = require('./helpers.js');
 
 const createFilteredData = require('../services/dataFilter.js');
 
-// Carregar os dados externos apenas uma vez no inicio
-loadRunesData();
-loadAugmentsData();
-loadSpellsData();
-loadItemsData();
 
 // Encontrar o PUUID através do nome, tag e servidor
 router.get('/api/player/:name/:tag/:server', async (req, res) => {
 
     const { name, tag, server } = req.params; 
-    const region = getRegionalRoute(server);  
+    const regionalRoute = getRegionalRoute(server);  
 
+    if (!isValidRiotId(name, tag, server)) {
+        return res.status(400).json({
+            error: 'Parâmetros inválidos',
+            details: 'Verifique se o nome, tag e servidor estão corretos'
+        });
+    }
+
+    if (!regionalRoute) {
+        return res.status(400).json({ error: 'Plataforma informada é inválida.' });
+    }
+    
     try {
         const axiosConfig = {
             headers: { 'X-Riot-Token': process.env.RIOT_API_KEY },
+            timeout: 5000,
             validateStatus: (status) => status < 500 // Aceitar status de erro 4xx
         };
 
         const response = await axios.get(
-            `https://${region}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${name}/${tag}`, 
+            `https://${regionalRoute}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${name}/${tag}`, 
             axiosConfig
             
         );
@@ -44,7 +48,7 @@ router.get('/api/player/:name/:tag/:server', async (req, res) => {
             return res.status(403).json({
                 error: 'Acesso negado pela API Riot',
                 details: response.data?.status?.message || 'Verifique sua API key',
-                riotError: response.data
+                
             });
         }
 
@@ -67,30 +71,45 @@ router.get('/api/player/:name/:tag/:server', async (req, res) => {
         res.json(response.data); 
     } catch (error) {
         console.error('Erro ao buscar conta:', {
-            message: err.message,
-            status: err.response?.status,
-            data: err.response?.data
+            message: error.message,
+            status: error.response?.status,
+            data: error.response?.data
         });
 
         // Mantém o status code original da Riot ou usa 500 se não houver resposta
-        res.status(err.response?.status || 500).json({
-            error: err.response?.data?.status?.message || 'Erro ao buscar a conta na API da Rito',
-            details: error.message,
-            riotError: err.response?.data
+        res.status(error.response?.status || 500).json({
+            error: error.response?.data?.status?.message || 'Erro ao buscar a conta na API da Rito',
+            details: error.message            
         });
     }
 });
 
 // Encontrar os dados usando matchId informado
-router.get('/api/matches/lol/last/:puuid/:platform/:matchId', async (req, res) => {
+router.get('/api/matches/lol/last/:puuid/:server/:matchId', async (req, res) => {
 
-    const { puuid, platform, matchId } = req.params;
-    const regionalRoute = getRegionalRoute(platform); 
+    const { puuid, server, matchId } = req.params;
+    const regionalRoute = getRegionalRoute(server); 
+
+    if (!/^[a-zA-Z0-9\-_]{30,100}$/.test(puuid)) {
+        return res.status(400).json({ error: 'PUUID inválido.' });
+    }
+    
+    if (!regionalRoute) {
+        return res.status(400).json({ error: 'Plataforma informada é inválida.' });
+    }
+    
+    if (!/^[A-Z0-9]{2,4}_\d{5,}$/.test(matchId)) {
+        return res.status(400).json({
+            error: 'matchId inválido',
+            details: 'O ID da partida não segue o formato esperado (ex: BR1_1234567890)'
+        });
+    }
 
     try {
         // config axios para não ter erro automatico
         const axiosConfig = {
             headers: { 'X-Riot-Token': process.env.RIOT_API_KEY },
+            timeout: 5000,
             validateStatus: (status) => status < 500 // Aceitar status de erro 4xx
         };
 
@@ -121,16 +140,17 @@ router.get('/api/matches/lol/last/:puuid/:platform/:matchId', async (req, res) =
         // Achar os dados do jogador com o PUUID
         const playerStats = matchData.info.participants.find(p => p.puuid === puuid);
 
-        const duoStats = matchData.info.participants.find(p => p.puuid !== puuid && p.subteamPlacement === playerStats.subteamPlacement);
-
         if (!playerStats) {
             return res.status(404).json({ error: 'Jogador não encontrado na partida.' });
         }
-
+        
+        const duoStats = matchData.info.participants.find(p => p.puuid !== puuid && p.subteamPlacement === playerStats.subteamPlacement);
+        
         // splashArt card do campeão
         const championJsonUrl = `http://ddragon.leagueoflegends.com/cdn/15.8.1/data/en_US/champion/${playerStats.championName}.json`;
 
-        let splashArtUrl = null;       
+        let splashArtUrl = null;
+        let iconChampionUrl = null;
 
         try {
             const champRes = await axios.get(championJsonUrl);
@@ -140,9 +160,12 @@ router.get('/api/matches/lol/last/:puuid/:platform/:matchId', async (req, res) =
             const selectedSkinNum = skins[skinPosition]?.num ?? skins[0].num;
 
             splashArtUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${playerStats.championName}_${selectedSkinNum}.jpg`;
-            iconChampionUrl = `https://ddragon.leagueoflegends.com/cdn/15.8.1/img/champion/${duoStats.championName}.png`;
-        } catch (err) {
-            console.error("Erro ao buscar skin do campeão:", err.message);
+
+            if (duoStats) {
+                iconChampionUrl = `https://ddragon.leagueoflegends.com/cdn/15.8.1/img/champion/${duoStats.championName}.png`;
+            }
+        } catch (error) {
+            console.error("Erro ao buscar skin do campeão:", error.message);
         }
 
         const filteredData = createFilteredData(matchData, playerStats, splashArtUrl, iconChampionUrl);
@@ -165,14 +188,23 @@ router.get('/api/matches/lol/last/:puuid/:platform/:matchId', async (req, res) =
 });
 
 // // testando - Nova rota que retorna os dados da última partida do jogador
-router.get('/api/matches/lol/last/:puuid/:platform', async (req, res) => {
+router.get('/api/matches/lol/last/:puuid/:server', async (req, res) => {
     
-    const { puuid, platform } = req.params;
-    const regionalRoute = getRegionalRoute(platform); 
+    const { puuid, server } = req.params;
+    const regionalRoute = getRegionalRoute(server);
+
+    if (!/^[a-zA-Z0-9\-_]{30,100}$/.test(puuid)) {
+        return res.status(400).json({ error: 'PUUID inválido.' });
+    }
+    
+    if (!regionalRoute) {
+        return res.status(400).json({ error: 'Plataforma informada é inválida.' });
+    }
 
     try {
         const axiosConfig = {
             headers: { 'X-Riot-Token': process.env.RIOT_API_KEY },
+            timeout: 5000,
             validateStatus: (status) => status < 500 
         };
         // Passo 1: Buscar a última partida (só 1)
@@ -197,23 +229,27 @@ router.get('/api/matches/lol/last/:puuid/:platform', async (req, res) => {
             });
         }
 
+        if (!Array.isArray(matchIdsResponse.data) || !matchIdsResponse.data.length) {
+            return res.status(404).json({ error: 'Nenhuma partida encontrada.' });
+        }
+        
         const [lastMatchId] = matchIdsResponse.data; 
         if (!lastMatchId) return res.status(404).json({ error: 'Nenhuma partida encontrada.' });
 
         // redireciona internamente para a outra rota
-        res.redirect(`/api/matches/lol/last/${puuid}/${platform}/${lastMatchId}`);
+        res.redirect(`/api/matches/lol/last/${puuid}/${server}/${lastMatchId}`);
         
-    } catch (err) {
+    } catch (error) {
         console.error('Erro ao buscar ID da última partida:', {
-            message: err.message,
-            status: err.response?.status,
-            data: err.response?.data
+            message: error.message,
+            status: error.response?.status,
+            data: error.response?.data
         });
 
         // Mantém o status code original da Riot ou usa 500 se não houver resposta
-        res.status(err.response?.status || 500).json({
-            error: err.response?.data?.status?.message || 'Erro ao buscar a última partida',
-            riotError: err.response?.data
+        res.status(error.response?.status || 500).json({
+            error: error.response?.data?.status?.message || 'Erro ao buscar a última partida',
+            
         });
     }
 });

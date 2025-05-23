@@ -4,18 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Status da Partida</title>
-  <link rel="stylesheet" href="./css/style.css" />
+  <title>Carta do Jogador da Partida</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&display=swap" rel="stylesheet">
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"
-    integrity="sha512-wC/cunGGDjXSl9OHUH0RuqSyW4YNLlsPwhcLxwWW1CR4OeC2E1xpcdZz2DeQkEmums41laI+eGMw95IJ15SS3g=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
+  
+  <link rel="stylesheet" href="./css/style.css" />
   <style>
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #1f2937 inset; /* Cor equivalente a bg-gray-800 */
@@ -24,8 +18,13 @@
     }
   </style>
   
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js" integrity="sha512-wC/cunGGDjXSl9OHUH0RuqSyW4YNLlsPwhcLxwWW1CR4OeC2E1xpcdZz2DeQkEmums41laI+eGMw95IJ15SS3g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   
 </head>
+
 
 <body class="bg-gradient-to-b from-black via-gray-700 to-black min-h-screen flex flex-col items-center justify-start p-2 ">
   <main class="w-full flex flex-col items-center">
@@ -61,8 +60,6 @@
     <section id="card-container" class="w-full flex justify-center mt-8 sm:mt-12"></section>
   </main>
 
-
   <script type="module" src="js/app.js"></script>
 </body>
-
 </html>
