@@ -24,21 +24,21 @@ document.getElementById('search-form').addEventListener('submit', async (e) => {
     if (!name || !tag || !server ) return alert('Preencha nome, tag e servidor');
 
     try {
-        // const baseUrl = 'http://localhost:3001'; // URL base da sua API
+        const baseUrl = window.BACKEND_URL;
         // console.log(`Buscando PUUID para: ${name} ${tag} ${server}`); 
 
         // 1. Buscar PUUID
-        const puuidRes = await axios.get(`http://localhost:3001/api/player/${name}/${tag}/${server}`);
+        const puuidRes = await axios.get(`${baseUrl}/api/player/${name}/${tag}/${server}`);
         const puuidData = puuidRes.data;
         
         // Partida de acordo com o matchID
         let matchUrl;
         if (matchID) {
             // Se o usuário forneceu um matchId específico
-            matchUrl = `http://localhost:3001/api/matches/lol/last/${puuidData.puuid}/${server}/${matchID}`;
+            matchUrl = `${baseUrl}/api/matches/lol/last/${puuidData.puuid}/${server}/${matchID}`;
         } else {
             // Se o campo estiver vazio, buscar a última partida automaticamente
-            matchUrl = `http://localhost:3001/api/matches/lol/last/${puuidData.puuid}/${server}`;
+            matchUrl = `${baseUrl}/api/matches/lol/last/${puuidData.puuid}/${server}`;
         }
         
         // Buscar partida com base no matchID
