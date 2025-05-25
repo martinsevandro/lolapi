@@ -1,6 +1,7 @@
 const {
     defineRole,
-    defineCorDaBorda,
+    defineCorDaBordaFrontal,
+    defineCorVerso,
     getShardIcon,
     getRuneIconUrl,
     getSummonerSpellIcon,
@@ -76,8 +77,8 @@ function createFilteredData(matchData, playerStats, splashArtUrl, iconChampionUr
 
         splashArt: splashArtUrl,
         iconChampion: iconChampionUrl,
-        corDaBorda: defineCorDaBorda(playerStats.kills, playerStats.deaths, playerStats.assists),
-
+        corDaBorda: defineCorDaBordaFrontal(playerStats.kills, playerStats.deaths, playerStats.assists),
+        corDoVerso: defineCorVerso(playerStats.kills, playerStats.deaths, playerStats.assists),
         perks: {
             defense: getShardIcon(playerStats.perks.statPerks.defense),
             flex: getShardIcon(playerStats.perks.statPerks.flex),
