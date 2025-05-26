@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carta do Jogador da Partida</title>
+  <title>LoL Card Match</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="./css/style.css" />
   <style>
     input:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0px 1000px #1f2937 inset; /* Cor equivalente a bg-gray-800 */
+      -webkit-box-shadow: 0 0 0px 1000px #1f2937 inset; 
       -webkit-text-fill-color: white;
       transition: background-color 5000s ease-in-out 0s;
     }
@@ -26,20 +26,20 @@
 </head>
 
 
-<body class="bg-gradient-to-b from-black via-gray-700 to-black min-h-screen flex flex-col items-center justify-start p-2 ">
+<body class="bg-gradient-to-b from-black via-gray-700 to-black min-h-screen flex flex-col items-center justify-start p-2">
   <main class="w-full flex flex-col items-center">
 
-    <form id="search-form" class="w-full max-w-md flex flex-col sm:flex-row sm:gap-4 gap-2 justify-center items-center">
+    <form id="search-form" class="w-full max-w-3xl flex flex-col lg:flex-row lg:gap-4 gap-2 justify-center items-center">
       <input type="text" id="riot-name" placeholder="Riot ID"
-        class="w-[248px] sm:w-full p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
+        class="w-[248px] sm:w-[384px] p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
         required />
 
       <input type="text" id="riot-tag" placeholder="Tagline"
-        class="w-[248px] sm:w-full p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
+        class="w-[248px] sm:w-[384px] p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
         required />
 
       <select id="riot-server"
-        class="w-[248px] sm:w-full p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
+        class="w-[248px] sm:w-[384px] p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
         required>
         <option value="br1">BR</option>
         <option value="na1">NA</option>
@@ -50,7 +50,7 @@
       </select>
 
       <input type="text" id="match-id" placeholder="Match ID (opcional)"
-        class="w-[248px] sm:w-full p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
+        class="w-[248px] sm:w-[384px] p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800"
          />
 
       <div class="flex gap-2 justify-center w-full">

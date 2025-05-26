@@ -3,40 +3,6 @@ body {
     font-feature-settings: "kern" 1, "liga" 1; 
 }
 
-/* 
-.perks-row {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 10px;
-}
-
-.perk-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 5px;
-}
-
-
-
-.items-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 5px;
-}
-
-.item-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 4px;
-    background-color: #1e1e1e;
-    padding: 2px;
-}
-*/
-
-
-
-
 .text-blur {
     color: rgb(255, 255, 255);
     text-shadow: 0 0 4px rgba(255, 255, 255, 0.5); 
@@ -66,19 +32,4 @@ body {
 
 .flip-back {
   transform: rotateY(180deg);
-}
-
-/* .flip-card:hover .flip-inner {
-  transform: rotateY(180deg);
-} */
-
-/* .carta-borda {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-size: cover;  
-  background-repeat: no-repeat;
-  background-position: center;
-  z-index: 1;  
-} */
-
+} 
