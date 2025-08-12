@@ -147,7 +147,7 @@ router.get('/api/matches/lol/last/:puuid/:server/:matchId', async (req, res) => 
         const duoStats = matchData.info.participants.find(p => p.puuid !== puuid && p.subteamPlacement === playerStats.subteamPlacement);
         
         // splashArt card do campeão
-        const championJsonUrl = `http://ddragon.leagueoflegends.com/cdn/15.8.1/data/en_US/champion/${playerStats.championName}.json`;
+        const championJsonUrl = `http://ddragon.leagueoflegends.com/cdn/15.15.1/data/en_US/champion/${playerStats.championName}.json`;
 
         let splashArtUrl = null;
         let iconChampionUrl = null;
@@ -162,7 +162,7 @@ router.get('/api/matches/lol/last/:puuid/:server/:matchId', async (req, res) => 
             splashArtUrl = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${playerStats.championName}_${selectedSkinNum}.jpg`;
 
             if (duoStats) {
-                iconChampionUrl = `https://ddragon.leagueoflegends.com/cdn/15.8.1/img/champion/${duoStats.championName}.png`;
+                iconChampionUrl = `https://ddragon.leagueoflegends.com/cdn/15.15.1/img/champion/${duoStats.championName}.png`;
             }
         } catch (error) {
             console.error("Erro ao buscar skin do campeão:", error.message);
