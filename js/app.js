@@ -54,14 +54,10 @@ document.getElementById('search-form').addEventListener('submit', async (e) => {
                 const errorMsg = error.response?.data?.error || 'Erro ao buscar a partida';
                 throw new Error(errorMsg);
             }
-        }
-        // console.log('Dados da partida (matchRes):', matchRes); // Verifique a resposta da partida
+        } 
         
-        const matchData = matchRes.data;
-        
-        // console.log('Dados da partida (matchData):', matchData); // Verifique os dados da partida
+        const matchData = matchRes.data; 
 
-        // 3. Renderizar no card
         renderCard(matchData);
     } catch (err) {
         console.error('Erro geral:', err);
@@ -231,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         inner.classList.remove('rotate-y-180');
         inner.style.transform = 'none';
 
-        // Opcional: esconder verso para garantir que não apareça
+        // esconder verso para garantir que não apareça
         const back = card.querySelector('.flip-back');
         if (back) back.style.visibility = 'hidden';
 

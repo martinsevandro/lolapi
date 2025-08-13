@@ -29,7 +29,7 @@ export function sanitizeImageTag(html) {
     img.removeAttribute('onerror');
     img.removeAttribute('onclick');
     img.removeAttribute('onload');
-    img.removeAttribute('style'); // opcional, se quiser mais controle
+    img.removeAttribute('style'); 
 
     return img.outerHTML;
 }
@@ -103,6 +103,19 @@ function buildThirdLine(cols) {
 }
 
 export function buildCardContent(data) {
+    // modo URF
+    if (data.gameMode === "URF") {
+        data.killParticipation = '42'; 
+        return (
+            buildFirstLine(data, `${data.totalMinionsKilled} CS`) +
+            buildSecondLine(data, `${data.timeCCingOthers}s CC`) +
+            buildThirdLine([
+                `Damage <br> ${escapeHTML(data.totalDamageDealtToChampions.toString())}`,
+                `DmgTaken <br> ${escapeHTML(data.totalDamageTaken.toString())}`,
+                `Heals <br> ${escapeHTML(data.totalHealsOnTeammates.toString())}`,
+            ])
+        );
+    }
     // modo arena
     if (data.gameMode === "CHERRY") {
         return (
@@ -142,7 +155,7 @@ export function buildCardContent(data) {
             buildSecondLine(data, `${data.minionsPerMinute} CSPM`) +
             buildThirdLine([
                 `Damage <br> ${escapeHTML(data.totalDamageDealtToChampions.toString())}`,
-                `DamagePM ${escapeHTML(data.damagePerMinute.toString())}`, 
+                `DamagePM ${escapeHTML(data.damagePerMinute.toString())}`,
                 `GoldPM ${escapeHTML(data.goldPerMinute.toString())}`,
             ])
         );
@@ -189,7 +202,7 @@ export function itemsCardContent(data) {
         <!-- Itens --> 
         <div class="flex flex-wrap gap-1">
             ${Object.values(data.items)
-                    .filter(url => url) // remove null/undefined
+                    .filter(url => url)  
                     .map(url => sanitizeImageTag(`<img src="${url}" class="w-6 h-6 bg-black rounded" alt="item ${url}">`))
                     .join('')}
         </div>
@@ -211,6 +224,4 @@ export function formatTime(seconds) {
     const min = Math.floor(seconds / 60);
     const sec = seconds % 60;
     return `${min}m ${sec}s`;
-}
-
-// export { buildCardContent, runasCardContent, itemsCardContent };
+} 
