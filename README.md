@@ -32,10 +32,10 @@ npm install
 Crie um arquivo .env na raiz do projeto com as seguintes variáveis:
 ```bash
 PORT=3001
-API_KEY=sua_chave_da_riot
+RIOT_API_KEY=sua_chave_da_riot
 ```
 * PORT: porta que o servidor vai usar (padrão 3001)
-* API_KEY: chave de API válida da Riot Games (é possível obter uma de 24h rapidamente)
+* RIOT_API_KEY: chave de API válida da Riot Games (é possível obter uma de 24h rapidamente)
 
 ---
 
